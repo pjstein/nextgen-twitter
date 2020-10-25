@@ -2,6 +2,7 @@
 
 import logging
 import random
+from time import sleep
 
 import tweepy
 
@@ -178,7 +179,13 @@ class PromotionListener(tweepy.StreamListener):
 
 def run_promote(events_filepath, states, **kwargs):
     events = EventLog(events_filepath)
-    client = get_client()
-    listener = PromotionListener(client, events, states)
-    stream = tweepy.Stream(client.auth, listener)
-    stream.filter(**kwargs)
+    while True:
+        client = get_client()
+        listener = PromotionListener(client, events, states)
+        stream = tweepy.Stream(client.auth, listener)
+
+        try:
+            stream.filter(**kwargs)
+        except:
+            logging.exception("Exploded. Waiting 5 minutes before retrying")
+            sleep(60 * 5)
