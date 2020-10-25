@@ -1,0 +1,20 @@
+{
+    "states": [
+        {
+            "name": "arizona",
+            "code": "az"
+        },
+        {
+            "name": "maine",
+            "code": "mn"
+        },
+        {
+            "name": "north carolina",
+            "code": "nc"
+        },
+        {
+            "name": "iowa",
+            "code": "ia"
+        }
+    ]
+}

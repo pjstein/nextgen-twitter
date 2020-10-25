@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+
+from json import loads
+import argparse
+
+from nextgen.promote import run_promote
+from nextgen.data import State
+
+
+def parse_states(filepath):
+    with open(filepath, "r") as f:
+        content = loads(f.read())
+        return [State(name=s["name"], code=s["name"]) for s in content["states"]]
+
+
+def parse_ids(filepath):
+    with open(filepath, "r") as f:
+        return loads(f.read()).get("ids")
+
+
+def main(events_filepath, follow_ids, states):
+    run_promote(
+        events_filepath,
+        states,
+        follow=follow_ids,
+        languages=["en"],
+        stall_warnings=True,
+    )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--events-path", type=str, help="Where should we write the events log?"
+    )
+    parser.add_argument(
+        "--ids-path", type=str, help="Where are the ids we're following?"
+    )
+    parser.add_argument(
+        "--states-path", type=str, help="Where are the states we care about?"
+    )
+
+    args = parser.parse_args()
+    states = parse_states(args.states_path)
+    ids = parse_ids(args.ids_path)
+
+    main(args.events_path, ids, states)
